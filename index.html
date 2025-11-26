@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Giggle‑Bot Universe • Pre‑order on WhatsApp</title>
+  <meta name="description" content="High‑end animated landing for Giggle‑Bots. Pre‑order on WhatsApp at launch offer ₹2,999 (MRP ₹4,999).">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <!-- Global animated background -->
+  <div class="bg-scene">
+    <div class="bg-blob b1"></div>
+    <div class="bg-blob b2"></div>
+    <div class="bg-blob b3"></div>
+    <div id="cursorBlob"></div>
+    <div class="grain"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top glass-nav border-bottom border-white-10">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#hero">
+        <span class="logo-dot"></span> GiggleZen
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="nav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="#models">Models</a></li>
+          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+          <li class="nav-item ms-lg-3"><button class="btn btn-success rounded-pill px-3 magnetic" data-bs-toggle="modal" data-bs-target="#orderModal"><i class="bi bi-whatsapp me-1"></i>Pre‑order</button></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header id="hero" class="section hero overflow-hidden">
+    <div class="container d-flex flex-column align-items-center text-center">
+      <div class="hero-badges mb-3" data-reveal>
+        <span class="badge pill">Emotion‑Aware</span>
+        <span class="badge pill">Wi‑Fi + BLE</span>
+        <span class="badge pill">Qi wireless</span>
+      </div>
+      <h1 class="display-4 fw-extrabold lh-1 mb-3" data-reveal>Giggle‑Bot Universe</h1>
+      <p class="lead text-white-60 mb-4" data-reveal delay="0.08">
+        Feel. Respond. Connect. Launch MRP <s>₹4,999</s> • <span class="text-success fw-bold">Offer ₹2,999</span>
+      </p>
+      <div class="d-flex gap-2 flex-wrap mb-4" data-reveal delay="0.12">
+        <button class="btn btn-light rounded-pill px-4 fw-semibold magnetic" data-bs-toggle="modal" data-bs-target="#orderModal"><i class="bi bi-whatsapp me-2"></i>Pre‑order on WhatsApp</button>
+        <a href="#models" class="btn btn-outline-light rounded-pill px-4">Explore models</a>
+      </div>
+
+      <div class="hero-stage position-relative">
+        <img src="assets/images/gigi.png" class="hero-image" alt="Gigi Bot">
+        <div class="hero-glow"></div>
+        <div class="hero-parallax p1"></div>
+        <div class="hero-parallax p2"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- FEATURES STRIP -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-6 text-center">
+        <div class="col"><div class="feature" data-reveal><i class="bi bi-emoji-smile"></i><p>Emotion‑aware AI</p></div></div>
+        <div class="col"><div class="feature" data-reveal><i class="bi bi-compass"></i><p>Anti‑roll stand</p></div></div>
+        <div class="col"><div class="feature" data-reveal><i class="bi bi-battery-charging"></i><p>Up to 12h</p></div></div>
+        <div class="col"><div class="feature" data-reveal><i class="bi bi-wifi"></i><p>Wi‑Fi + BLE</p></div></div>
+        <div class="col"><div class="feature" data-reveal><i class="bi bi-grid-3x3-gap"></i><p>32×16 LED</p></div></div>
+        <div class="col"><div class="feature" data-reveal><i class="bi bi-droplet"></i><p>IP54 splash</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODELS -->
+  <section id="models" class="section">
+    <div class="container">
+      <div class="d-flex align-items-end justify-content-between mb-4">
+        <h2 class="h1 fw-bold mb-0">Choose your companion</h2>
+        <p class="small text-white-60 mb-0">Tap a card to pre‑order at <s>₹4,999</s> <span class="text-success fw-semibold">₹2,999</span></p>
+      </div>
+      <div class="row g-4" id="productGrid"></div>
+    </div>
+
+    <!-- Floating parallax renders -->
+    <div class="container-xxl position-relative parallax-gallery">
+      <img src="assets/images/zenzo.png" class="pg-item i1" alt="Zenzo">
+      <img src="assets/images/bluvi.png" class="pg-item i2" alt="Bluvi">
+      <img src="assets/images/sparx.png" class="pg-item i3" alt="Sparx">
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-6" data-reveal>
+          <h3 class="fw-bold">Built for real life. Designed for feelings.</h3>
+          <p class="text-white-60">Compact AI companions with emotion‑aware replies, a safe anti‑roll stand, Qi wireless charging and a bright 32×16 LED face. Pick the mood and color that fit your space.</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-light rounded-pill fw-semibold magnetic" data-bs-toggle="modal" data-bs-target="#orderModal"><i class="bi bi-whatsapp me-2"></i>Pre‑order</button>
+            <a href="tel:+917093434056" class="btn btn-outline-light rounded-pill"><i class="bi bi-telephone me-2"></i>Call sales</a>
+          </div>
+        </div>
+        <div class="col-lg-6" data-reveal>
+          <div class="about-frame">
+            <img src="assets/images/nova.png" class="img-fluid rounded-4 shadow-lg" alt="Nova bot">
+            <span class="frame-glow"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <h3 class="fw-bold mb-4">FAQ</h3>
+      <div class="accordion accordion-flush" id="faqAcc">
+        <div class="accordion-item bg-transparent border-white-10 text-white">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed bg-transparent text-white" type="button" data-bs-toggle="collapse" data-bs-target="#q1">How do I place a pre‑order?</button>
+          </h2>
+          <div id="q1" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
+            <div class="accordion-body text-white-60">Click any Pre‑order button. WhatsApp opens with a pre‑filled message — send it and our team will confirm pricing and delivery.</div>
+          </div>
+        </div>
+        <div class="accordion-item bg-transparent border-white-10 text-white">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed bg-transparent text-white" type="button" data-bs-toggle="collapse" data-bs-target="#q2">What is the delivery timeline?</button>
+          </h2>
+          <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
+            <div class="accordion-body text-white-60">First batch ships in 4–6 weeks. You’ll receive regular updates on WhatsApp.</div>
+          </div>
+        </div>
+        <div class="accordion-item bg-transparent border-white-10 text-white">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed bg-transparent text-white" type="button" data-bs-toggle="collapse" data-bs-target="#q3">Do you ship across India?</button>
+          </h2>
+          <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
+            <div class="accordion-body text-white-60">Yes. Standard courier partners with COD / pre‑paid options.</div>
+          </div>
+        </div>
+        <div class="accordion-item bg-transparent border-white-10 text-white">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed bg-transparent text-white" type="button" data-bs-toggle="collapse" data-bs-target="#q4">Are the faces customizable?</button>
+          </h2>
+          <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
+            <div class="accordion-body text-white-60">Yes, choose preset expressions and we’ll push updates over Wi‑Fi.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="section-sm border-top border-white-10">
+    <div class="container d-flex flex-column flex-lg-row align-items-center justify-content-between gap-2">
+      <p class="mb-0 small text-white-60">© <span id="year"></span> GiggleZen • Hyderabad</p>
+      <div class="d-flex gap-2">
+        <a href="tel:+917093434056" class="btn btn-outline-light btn-sm rounded-pill"><i class="bi bi-telephone me-2"></i>+91 70934 34056</a>
+        <a href="https://gigglezen.com" class="btn btn-outline-light btn-sm rounded-pill">gigglezen.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ORDER MODAL -->
+  <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-white border-white-10 rounded-4">
+        <div class="modal-header border-white-10">
+          <h5 class="modal-title">Pre‑order on WhatsApp</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="orderForm">
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Your name</label>
+                <input class="form-control form-control-lg control" name="name" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input class="form-control form-control-lg control" name="phone" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Model</label>
+                <select class="form-select form-select-lg control" name="model" required></select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Qty</label>
+                <input type="number" class="form-control form-control-lg control" name="qty" min="1" value="1">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">City</label>
+                <input class="form-control form-control-lg control" name="city">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Notes (optional)</label>
+                <textarea class="form-control control" rows="3" name="notes"></textarea>
+              </div>
+              <div class="col-12">
+                <div class="alert alert-success d-flex align-items-center mb-0" role="alert">
+                  <i class="bi bi-tag-fill me-2"></i>Offer price <strong class="ms-1">₹2,999</strong> (MRP <s>₹4,999</s>) — limited launch batch.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer border-white-10">
+            <button type="submit" class="btn btn-success rounded-pill"><i class="bi bi-whatsapp me-2"></i>Send on WhatsApp</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

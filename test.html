@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pre-order on WhatsApp</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1b1b29 0, #050510 55%, #000 100%);
+      color: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .card-shell {
+      display: flex;
+      flex-wrap: wrap;
+      background: rgba(8, 8, 15, 0.96);
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(18px);
+    }
+
+    /* LEFT INFO PANEL */
+    .info-panel {
+      flex: 1.1;
+      min-width: 260px;
+      padding: 26px 26px 22px;
+      background: radial-gradient(circle at top left, #ffcf71 0, #ff8a71 35%, #181820 100%);
+      color: #1a1010;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .info-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at bottom right, rgba(0,0,0,0.35), transparent 60%);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    .info-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      background: rgba(255,255,255,0.9);
+      color: #111;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #16a34a;
+      box-shadow: 0 0 0 4px rgba(22,163,74,0.35);
+    }
+
+    .info-title {
+      margin: 18px 0 6px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .info-sub {
+      font-size: 14px;
+      opacity: 0.9;
+      max-width: 260px;
+    }
+
+    .bot-line {
+      margin: 18px 0 14px;
+      font-size: 13px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+      align-items: center;
+    }
+
+    .bot-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.12);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .bot-names {
+      font-weight: 600;
+    }
+
+    .price-block {
+      background: rgba(255,255,255,0.9);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 13px;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 6px;
+      color: #111;
+    }
+
+    .price-main {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .price-main strong {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .price-old {
+      text-decoration: line-through;
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    .price-note {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.85;
+    }
+
+    /* RIGHT FORM PANEL */
+    .form-panel {
+      flex: 1.4;
+      min-width: 320px;
+      padding: 24px 26px 22px;
+      background: rgba(10, 10, 18, 0.98);
+    }
+
+    .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .form-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .form-caption {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .close-x {
+      border: none;
+      background: transparent;
+      color: #888;
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .close-x:hover {
+      color: #fff;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 12px;
+      color: #c8c8c8;
+    }
+
+    input,
+    select,
+    textarea {
+      background: #13131a;
+      border-radius: 9px;
+      border: 1px solid #262636;
+      padding: 8px 10px;
+      color: #f5f5f5;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #666b77;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #27d366;
+      box-shadow: 0 0 0 1px rgba(39, 211, 102, 0.35);
+      background: #101018;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 58px;
+      max-height: 120px;
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .tiny-note {
+      font-size: 11px;
+      opacity: 0.6;
+    }
+
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: #25d366;
+      color: #0b1b10;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s;
+      white-space: nowrap;
+    }
+
+    .wa-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 32px rgba(37, 211, 102, 0.6);
+      background: #20c158;
+    }
+
+    .wa-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    @media (max-width: 780px) {
+      .card-shell {
+        flex-direction: column;
+      }
+
+      .info-panel,
+      .form-panel {
+        width: 100%;
+      }
+
+      .info-panel {
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+    }
+
+    @media (max-width: 540px) {
+      body {
+        padding: 16px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .form-footer .tiny-note {
+        text-align: center;
+      }
+
+      .form-footer .wa-btn {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="card-shell">
+      <!-- LEFT INFO -->
+      <div class="info-panel">
+        <div class="info-content">
+          <div class="badge">
+            <span class="badge-dot"></span>
+            Limited launch batch
+          </div>
+
+          <h1 class="info-title">Pre-order your emotion bot</h1>
+          <p class="info-sub">
+            Reserve a companion from the Bot Universe and complete payment later on WhatsApp.
+          </p>
+
+          <div class="bot-line">
+            <div class="bot-avatar">🤖</div>
+            <div>
+              <div class="bot-names">Gigi, Zenzo, Bluvi, Melo & more</div>
+              <div style="font-size: 12px; opacity: 0.75;">
+                Pick your favorite personality from the list.
+              </div>
+            </div>
+          </div>
+
+          <div class="price-block">
+            <div class="price-main">
+              <span>Offer price</span>
+              <strong>₹2,999</strong>
+              <span class="price-old">₹4,999</span>
+            </div>
+            <div class="price-note">Special pricing for the first launch batch only</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT FORM -->
+      <div class="form-panel">
+        <div class="form-header">
+          <div>
+            <div class="form-title">Pre-order on WhatsApp</div>
+            <div class="form-caption">We’ll create a WhatsApp message with your details.</div>
+          </div>
+          <button class="close-x" type="button">×</button>
+        </div>
+
+        <form id="preorderForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name">Your name</label>
+              <input id="name" name="name" type="text" placeholder="Enter your name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" placeholder="+91 ..." required />
+            </div>
+
+            <div class="form-group">
+              <label for="model">Model</label>
+              <select id="model" name="model">
+                <option value="Gigi — Joy">Gigi — Joy</option>
+                <option value="Zenzo — Calm">Zenzo — Calm</option>
+                <option value="Bluvi — Curiosity">Bluvi — Curiosity</option>
+                <option value="Melo — Caring">Melo — Caring</option>
+                <option value="Nix — Alert">Nix — Alert</option>
+                <option value="Sparx — Excitement">Sparx — Excitement</option>
+                <option value="Nova — Wonder">Nova — Wonder</option>
+                <option value="Bobo — Warmth">Bobo — Warmth</option>
+                <option value="Astra — Focus">Astra — Focus</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="qty">Qty</label>
+              <input id="qty" name="qty" type="number" min="1" value="1" />
+            </div>
+
+            <div class="form-group">
+              <label for="city">City</label>
+              <input id="city" name="city" type="text" placeholder="Your city" />
+            </div>
+
+            <div class="form-group full">
+              <label for="notes">Notes (optional)</label>
+              <textarea id="notes" name="notes" placeholder="Any special requests or questions?"></textarea>
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <div class="tiny-note">
+              You’ll be redirected to WhatsApp to confirm this pre-order.
+            </div>
+
+            <button type="submit" class="wa-btn">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path
+                  d="M16.01 5.333c-5.5 0-9.967 4.3-9.967 9.6 0 1.69.456 3.335 1.324 4.79L5.333 26.667l7.127-1.992c1.39.38 2.506.518 3.55.518h.004c5.5 0 9.967-4.3 9.967-9.6 0-2.565-1.04-4.977-2.93-6.79-1.89-1.817-4.414-2.77-7.04-2.77zm0 2.134c4.3 0 7.8 3.382 7.8 7.547 0 4.157-3.5 7.547-7.803 7.547-1.04 0-2.083-.147-3.09-.438l-.22-.067-4.23 1.183 1.17-4.022-.14-.208c-.81-1.21-1.237-2.617-1.237-4.002 0-4.165 3.5-7.547 7.8-7.547zm-3.77 2.74c-.2-.44-.41-.45-.6-.458l-.51-.01c-.18 0-.47.067-.72.335-.25.27-.94.916-.94 2.233 0 1.317.96 2.59 1.09 2.768.13.178 1.85 2.91 4.55 3.963 2.24.883 2.7.71 3.19.666.49-.044 1.57-.64 1.79-1.26.22-.62.22-1.15.15-1.26-.07-.11-.24-.18-.5-.32-.26-.14-1.57-.86-1.81-.96-.24-.09-.42-.14-.6.14-.18.28-.69.96-.84 1.16-.15.2-.31.21-.57.07-.26-.14-1.09-.44-2.07-1.4-.76-.74-1.27-1.65-1.42-1.93-.15-.28-.02-.43.11-.57.11-.11.26-.29.38-.43.12-.15.16-.25.24-.42.08-.18.04-.33-.02-.46-.06-.11-.57-1.4-.78-1.92z"
+                  fill="currentColor"
+                />
+              </svg>
+              Send on WhatsApp
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("preorderForm");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const model = document.getElementById("model").value;
+      const qty = document.getElementById("qty").value || "1";
+      const city = document.getElementById("city").value.trim();
+      const notes = document.getElementById("notes").value.trim();
+
+      const message = `
+Pre-order enquiry:
+Name: ${name}
+Customer Phone: ${phone}
+Model: ${model}
+Qty: ${qty}
+City: ${city || "-"}
+Notes: ${notes || "-"}
+Offer price: ₹2,999 (MRP ₹4,999) – limited launch batch.
+      `.trim();
+
+      // Replace with your business WhatsApp number (without + or spaces)
+      const businessNumber = "917093434056";
+
+      const waUrl =
+        "https://wa.me/" +
+        businessNumber +
+        "?text=" +
+        encodeURIComponent(message);
+
+      window.open(waUrl, "_blank");
+    });
+  </script>
+</body>
+</html>

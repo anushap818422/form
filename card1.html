@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Section Inside Laptop Mockup</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(circle at top, #222 0, #000 45%, #111 100%);
+        font-family: Arial, sans-serif;
+        color: #fff;
+    }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 0;
+    }
+
+    .laptop-frame {
+        width: 900px;
+        background: #101010;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 20px 35px rgba(0,0,0,0.6);
+        position: relative;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .laptop-frame:hover {
+        transform: translateY(-10px) rotateX(2deg);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+    }
+
+    .laptop-screen {
+        background: radial-gradient(circle at top left, #20253b, #070910 60%, #050609 100%);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 2px solid #000;
+    }
+
+    .full-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 30px 35px;
+    }
+
+    .section-image {
+        width: 44%;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .section-text {
+        width: 50%;
+        padding-right: 30px;
+    }
+
+    .pill-label {
+        display: inline-block;
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 4px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.3);
+        margin-bottom: 10px;
+        opacity: 0.9;
+    }
+
+    .section-text h2 {
+        font-size: 30px;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .section-text p {
+        opacity: 0.9;
+        margin-bottom: 18px;
+        line-height: 1.7;
+    }
+
+    /* NORMAL BUTTON */
+    .primary-btn {
+        display: inline-block;
+        padding: 10px 22px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #ffd86f, #ff8a00);
+        color: #111;
+        font-weight: bold;
+        font-size: 14px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-right: 12px;
+        border: none;
+        transition: 0.2s ease;
+    }
+
+    .primary-btn:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.08);
+    }
+
+    /* 🔥 GLOWING BUTTON EFFECT */
+    .glow-btn {
+        display: inline-block;
+        padding: 10px 22px;
+        border-radius: 999px;
+        background: white;
+        color: #000;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 14px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 0 6px white, 0 0 5px white;
+        animation: pulseGlow 2s infinite ease-in-out;
+        transition: 0.2s ease;
+    }
+
+    .glow-btn:hover {
+        transform: translateY(-2px) scale(1.05);
+    }
+
+    
+</style>
+
+</head>
+<body>
+
+<section class="wrapper">
+
+    <div class="laptop-frame">
+        <div class="laptop-screen">
+
+            <div class="full-section">
+
+                <div class="section-text">
+                    <span class="pill-label">BOT UNIVERSE</span>
+                    <h2>Built for Play, Joy & Wonder</h2>
+                    <p>
+                        Order now and bring home a bot that listens, reacts, and bonds with you. 
+                        Your playful, voice-responsive companion is ready to become your cutest little friend.
+                    </p>
+
+                    <!-- BUTTONS -->
+                    <button class="primary-btn">Pre-Order</button>
+                     <button class="glow-btn"><svg style="padding-right: 5px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
+  <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.75 1.75 0 0 1-1.657-.459L5.482 8.062a1.75 1.75 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z"/>
+</svg> Call Us</button>
+                </div>
+
+                <img class="section-image" src="zenzo.jpeg" alt="Robot">
+
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>
