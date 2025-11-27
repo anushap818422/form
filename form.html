@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Pre-order on WhatsApp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     * {
       box-sizing: border-box;
@@ -11,33 +13,122 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #101010;
+      background: radial-gradient(circle at top, #1b1b29 0, #050510 55%, #000 100%);
       color: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       min-height: 100vh;
-    }
-
-    .backdrop {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at top, #333 0, #000 50%);
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 24px;
     }
 
-    .form-card {
+    .page-wrapper {
       width: 100%;
-      max-width: 520px;
-      background: rgba(15, 15, 15, 0.95);
+      max-width: 960px;
+    }
+
+    .card-shell {
+      display: flex;
+      flex-wrap: wrap;
+      background: rgba(8, 8, 15, 0.96);
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(18px);
+    }
+
+    /* LEFT INFO PANEL */
+    .info-panel {
+      flex: 1.1;
+      min-width: 260px;
+      padding: 26px 26px 22px;
+      background: radial-gradient(circle at top left, #ffcf71 0, #ff8a71 35%, #181820 100%);
+      color: #1a1010;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .info-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.35), transparent 60%);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    .info-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      background: rgba(255, 255, 255, 0.9);
+      color: #111;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #16a34a;
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.35);
+    }
+
+    .info-title {
+      margin: 18px 0 6px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .info-sub {
+      font-size: 14px;
+      opacity: 0.9;
+      max-width: 280px;
+    }
+
+    /* MODEL IMAGE AREA */
+    .model-visual {
+      margin-top: 20px;
       border-radius: 18px;
-      padding: 20px 22px 18px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(20px);
+      background: rgba(0, 0, 0, 0.18);
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 190px;
+    }
+
+    .model-visual img {
+      max-width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      border-radius: 16px;
+      display: block;
+    }
+
+    .model-caption {
+      margin-top: 8px;
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    /* RIGHT FORM PANEL */
+    .form-panel {
+      flex: 1.4;
+      min-width: 320px;
+      padding: 24px 26px 22px;
+      background: rgba(10, 10, 18, 0.98);
     }
 
     .form-header {
@@ -45,20 +136,27 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 18px;
+      gap: 12px;
     }
 
     .form-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
+    }
+
+    .form-caption {
+      font-size: 12px;
+      opacity: 0.7;
     }
 
     .close-x {
       border: none;
       background: transparent;
-      color: #aaa;
-      font-size: 20px;
+      color: #888;
+      font-size: 18px;
       cursor: pointer;
       line-height: 1;
+      flex-shrink: 0;
     }
 
     .close-x:hover {
@@ -69,7 +167,7 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .form-group {
@@ -90,71 +188,94 @@
     input,
     select,
     textarea {
-      background: #181818;
-      border-radius: 10px;
-      border: 1px solid #2a2a2a;
+      background: #13131a;
+      border-radius: 9px;
+      border: 1px solid #262636;
       padding: 8px 10px;
       color: #f5f5f5;
       font-size: 14px;
       outline: none;
       transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+      width: 100%;
     }
 
     input::placeholder,
     textarea::placeholder {
-      color: #666;
+      color: #666b77;
     }
 
     input:focus,
     select:focus,
     textarea:focus {
       border-color: #27d366;
-      box-shadow: 0 0 0 1px rgba(39, 211, 102, 0.4);
-      background: #141414;
+      box-shadow: 0 0 0 1px rgba(39, 211, 102, 0.35);
+      background: #101018;
     }
 
     textarea {
       resize: vertical;
-      min-height: 60px;
+      min-height: 58px;
       max-height: 120px;
     }
 
-    .price-strip {
-      margin: 12px 0 14px;
+    /* PRICE BLOCK */
+    .price-block {
       background: #fff3c7;
-      color: #222;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 10px 12px;
       font-size: 13px;
       display: flex;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 6px;
+      color: #111;
     }
 
-    .tag-icon {
-      font-size: 16px;
+    .price-main {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
-    .price-strip strong {
-      font-weight: 600;
+    .price-main strong {
+      font-size: 18px;
+      font-weight: 700;
     }
 
     .price-old {
       text-decoration: line-through;
+      font-size: 13px;
       opacity: 0.7;
-      margin-left: 4px;
     }
 
-    .bottom-row {
+    .price-note {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.85;
+    }
+
+    .form-footer {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tiny-note {
+      font-size: 11px;
+      opacity: 0.6;
+      max-width: 260px;
     }
 
     .wa-btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 18px;
+      padding: 9px 18px;
       border-radius: 999px;
       border: none;
       cursor: pointer;
@@ -162,13 +283,14 @@
       color: #0b1b10;
       font-weight: 600;
       font-size: 14px;
-      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45);
       transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s;
+      white-space: nowrap;
     }
 
     .wa-btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 12px 32px rgba(37, 211, 102, 0.55);
+      box-shadow: 0 12px 32px rgba(37, 211, 102, 0.6);
       background: #20c158;
     }
 
@@ -177,113 +299,307 @@
       height: 16px;
     }
 
-    @media (max-width: 540px) {
-      .form-card {
-        padding: 18px 14px 16px;
-        border-radius: 14px;
+    /* =========================
+       LARGE TABLET / SMALL LAPTOP
+       ========================= */
+    @media (max-width: 900px) {
+      body {
+        padding: 20px;
+        align-items: flex-start;
       }
+
+      .page-wrapper {
+        max-width: 100%;
+      }
+
+      .card-shell {
+        border-radius: 20px;
+      }
+
+      .info-title {
+        font-size: 22px;
+      }
+
+      .info-sub {
+        max-width: 100%;
+      }
+    }
+
+    /* =========================
+       TABLET
+       ========================= */
+    @media (max-width: 780px) {
+      body {
+        padding: 18px;
+      }
+
+      .card-shell {
+        flex-direction: column;
+      }
+
+      .info-panel,
+      .form-panel {
+        width: 100%;
+      }
+
+      .info-panel {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .info-panel {
+        padding: 22px 20px 18px;
+      }
+
+      .form-panel {
+        padding: 20px 20px 18px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* =========================
+       MOBILE
+       ========================= */
+    @media (max-width: 540px) {
+      body {
+        padding: 14px;
+      }
+
+      .card-shell {
+        border-radius: 18px;
+      }
+
+      .info-title {
+        font-size: 20px;
+      }
+
+      .info-sub {
+        font-size: 13px;
+      }
+
+      .model-visual {
+        min-height: 160px;
+      }
+
       .form-grid {
         grid-template-columns: 1fr;
       }
-      .bottom-row {
-        justify-content: center;
+
+      .form-header {
+        flex-direction: row;
+        align-items: flex-start;
       }
+
       .form-title {
+        font-size: 16px;
+      }
+
+      .form-caption {
+        font-size: 11px;
+      }
+
+      .form-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .tiny-note {
+        text-align: center;
+        max-width: none;
+      }
+
+      .wa-btn {
+        justify-content: center;
+        width: 100%;
+      }
+    }
+
+    /* =========================
+       VERY SMALL DEVICES
+       ========================= */
+    @media (max-width: 380px) {
+      .card-shell {
+        border-radius: 16px;
+      }
+
+      .info-panel,
+      .form-panel {
+        padding: 16px 14px 14px;
+      }
+
+      .info-title {
         font-size: 18px;
+      }
+
+      .badge {
+        font-size: 10px;
+      }
+
+      input,
+      select,
+      textarea {
+        font-size: 13px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="page-wrapper">
+    <div class="card-shell">
+      <!-- LEFT INFO -->
+      <div class="info-panel">
+        <div class="info-content">
+          <div class="badge">
+            <span class="badge-dot"></span>
+            Limited launch batch
+          </div>
 
-<div class="backdrop">
-  <div class="form-card">
-    <div class="form-header">
-      <div class="form-title">Pre-order on WhatsApp</div>
-      <button class="close-x" type="button">×</button>
+          <h1 class="info-title">Pre-order your emotion bot</h1>
+          <p class="info-sub">
+            Reserve your AI bot today for instant voice-based emotional reactions.
+          </p>
+
+          <!-- MODEL IMAGE THAT CHANGES WITH SELECT -->
+          <div class="model-visual">
+            <img id="modelImage" src="gigi-joy.png" alt="Gigi — Joy" />
+          </div>
+          <div class="model-caption" id="modelCaption">
+            Currently viewing: <strong>Gigi — Joy</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT FORM -->
+      <div class="form-panel">
+        <div class="form-header">
+          <div>
+            <div class="form-title">Pre-order on WhatsApp</div>
+            <div class="form-caption">We’ll create a WhatsApp message with your details.</div>
+          </div>
+          <button class="close-x" type="button">×</button>
+        </div>
+
+        <form id="preorderForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name">Your name</label>
+              <input id="name" name="name" type="text" placeholder="Enter your name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" placeholder="+91 ..." required />
+            </div>
+
+            <div class="form-group">
+              <label for="model">Model</label>
+              <select id="model" name="model">
+                <option value="Gigi — Joy">Gigi — Joy</option>
+                <option value="Zenzo — Calm">Zenzo — Calm</option>
+                <option value="Bluvi — Curiosity">Bluvi — Curiosity</option>
+                <option value="Melo — Caring">Melo — Caring</option>
+                <option value="Nix — Alert">Nix — Alert</option>
+                <option value="Sparx — Excitement">Sparx — Excitement</option>
+                <option value="Nova — Wonder">Nova — Wonder</option>
+                <option value="Bobo — Warmth">Bobo — Warmth</option>
+                <option value="Astra — Focus">Astra — Focus</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="qty">Qty</label>
+              <input id="qty" name="qty" type="number" min="1" value="1" />
+            </div>
+
+            <div class="form-group">
+              <label for="city">City</label>
+              <input id="city" name="city" type="text" placeholder="Your city" />
+            </div>
+
+            <div class="form-group full">
+              <label for="notes">Notes (optional)</label>
+              <textarea id="notes" name="notes" placeholder="Any special requests or questions?"></textarea>
+            </div>
+          </div>
+
+          <!-- PRICE -->
+          <div class="price-block">
+            <div class="price-main">
+              <span>Offer price</span>
+              <strong>₹2,999</strong>
+              <span class="price-old">₹4,999</span>
+            </div>
+            <div class="price-note">Special pricing for the first launch batch only</div>
+          </div>
+
+          <div class="form-footer">
+            <div class="tiny-note">
+              You’ll be redirected to WhatsApp to confirm this pre-order.
+            </div>
+
+            <button type="submit" class="wa-btn">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path
+                  d="M16.01 5.333c-5.5 0-9.967 4.3-9.967 9.6 0 1.69.456 3.335 1.324 4.79L5.333 26.667l7.127-1.992c1.39.38 2.506.518 3.55.518h.004c5.5 0 9.967-4.3 9.967-9.6 0-2.565-1.04-4.977-2.93-6.79-1.89-1.817-4.414-2.77-7.04-2.77zm0 2.134c4.3 0 7.8 3.382 7.8 7.547 0 4.157-3.5 7.547-7.803 7.547-1.04 0-2.083-.147-3.09-.438l-.22-.067-4.23 1.183 1.17-4.022-.14-.208c-.81-1.21-1.237-2.617-1.237-4.002 0-4.165 3.5-7.547 7.8-7.547zm-3.77 2.74c-.2-.44-.41-.45-.6-.458l-.51-.01c-.18 0-.47.067-.72.335-.25.27-.94.916-.94 2.233 0 1.317.96 2.59 1.09 2.768.13.178 1.85 2.91 4.55 3.963 2.24.883 2.7.71 3.19.666.49-.044 1.57-.64 1.79-1.26.22-.62.22-1.15.15-1.26-.07-.11-.24-.18-.5-.32-.26-.14-1.57-.86-1.81-.96-.24-.09-.42-.14-.6.14-.18.28-.69.96-.84 1.16-.15.2-.31.21-.57.07-.26-.14-1.09-.44-2.07-1.4-.76-.74-1.27-1.65-1.42-1.93-.15-.28-.02-.43.11-.57.11-.11.26-.29.38-.43.12-.15.16-.25.24-.42.08-.18.04-.33-.02-.46-.06-.11-.57-1.4-.78-1.92z"
+                  fill="currentColor"
+                />
+              </svg>
+              Send on WhatsApp
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-
-    <form id="preorderForm">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="name">Your name</label>
-          <input id="name" name="name" type="text" placeholder="Enter your name" required />
-        </div>
-
-        <div class="form-group">
-          <label for="phone">Phone</label>
-          <input id="phone" name="phone" type="tel" placeholder="+91 ..." required />
-        </div>
-
-        <div class="form-group">
-          <label for="model">Model</label>
-          <select id="model" name="model">
-            <option value="Gigi — Joy">Gigi — Joy</option>
-            <option value="Gigi — Play">Zenzo — Calm</option>
-            <option value="Gigi — Play">Bluvi — Curiosity</option>
-            <option value="Gigi — Play">Melo — Caring</option>
-            <option value="Gigi — Play">Nix — Alert</option>
-            <option value="Gigi — Play">Sparx — Excitement</option>
-            <option value="Gigi — Play">Nova — Wonder</option>
-            <option value="Gigi — Play">Bobo — Warmth</option>
-            <option value="Gigi — Pro">Astra — Focus</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="qty">Qty</label>
-          <input id="qty" name="qty" type="number" min="1" value="1" />
-        </div>
-
-        <div class="form-group">
-          <label for="city">City</label>
-          <input id="city" name="city" type="text" placeholder="Your city" />
-        </div>
-
-        <div class="form-group full">
-          <label for="notes">Notes (optional)</label>
-          <textarea id="notes" name="notes" placeholder="Any special requests or questions?"></textarea>
-        </div>
-      </div>
-
-      <div class="price-strip">
-        <span class="tag-icon">🏷️</span>
-        <span>
-          Offer price <strong>₹2,999</strong>
-          <span class="price-old">₹4,999</span> — limited launch batch.
-        </span>
-      </div>
-
-      <div class="bottom-row">
-        <button type="submit" class="wa-btn">
-          <!-- WhatsApp icon -->
-          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path
-              d="M16.01 5.333c-5.5 0-9.967 4.3-9.967 9.6 0 1.69.456 3.335 1.324 4.79L5.333 26.667l7.127-1.992c1.39.38 2.506.518 3.55.518h.004c5.5 0 9.967-4.3 9.967-9.6 0-2.565-1.04-4.977-2.93-6.79-1.89-1.817-4.414-2.77-7.04-2.77zm0 2.134c4.3 0 7.8 3.382 7.8 7.547 0 4.157-3.5 7.547-7.803 7.547-1.04 0-2.083-.147-3.09-.438l-.22-.067-4.23 1.183 1.17-4.022-.14-.208c-.81-1.21-1.237-2.617-1.237-4.002 0-4.165 3.5-7.547 7.8-7.547zm-3.77 2.74c-.2-.44-.41-.45-.6-.458l-.51-.01c-.18 0-.47.067-.72.335-.25.27-.94.916-.94 2.233 0 1.317.96 2.59 1.09 2.768.13.178 1.85 2.91 4.55 3.963 2.24.883 2.7.71 3.19.666.49-.044 1.57-.64 1.79-1.26.22-.62.22-1.15.15-1.26-.07-.11-.24-.18-.5-.32-.26-.14-1.57-.86-1.81-.96-.24-.09-.42-.14-.6.14-.18.28-.69.96-.84 1.16-.15.2-.31.21-.57.07-.26-.14-1.09-.44-2.07-1.4-.76-.74-1.27-1.65-1.42-1.93-.15-.28-.02-.43.11-.57.11-.11.26-.29.38-.43.12-.15.16-.25.24-.42.08-.18.04-.33-.02-.46-.06-.11-.57-1.4-.78-1.92z"
-              fill="currentColor"
-            />
-          </svg>
-          Send on WhatsApp
-        </button>
-      </div>
-    </form>
   </div>
-</div>
 
-<script>
-  const form = document.getElementById("preorderForm");
+  <script>
+    const form = document.getElementById("preorderForm");
+    const modelSelect = document.getElementById("model");
+    const modelImage = document.getElementById("modelImage");
+    const modelCaption = document.getElementById("modelCaption");
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+    // Map models to image paths (replace with your real image URLs)
+    const modelImages = {
+      "Gigi — Joy": "./assets/images/gigi.png",
+      "Zenzo — Calm": "./assets/images/zenzo.png",
+      "Bluvi — Curiosity": "./assets/images/bluvi.png",
+      "Melo — Caring": "./assets/images/melo.png",
+      "Nix — Alert": "./assets/images/nix.png",
+      "Sparx — Excitement": "./assets/images/sparx.png",
+      "Nova — Wonder": "./assets/images/nova.png",
+      "Bobo — Warmth": "./assets/images/bobo.png",
+      "Astra — Focus": "./assets/images/astra.png"
+    };
 
-    const name = document.getElementById("name").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const model = document.getElementById("model").value;
-    const qty = document.getElementById("qty").value || "1";
-    const city = document.getElementById("city").value.trim();
-    const notes = document.getElementById("notes").value.trim();
+    function updateModelVisual() {
+      const selected = modelSelect.value;
+      const src = modelImages[selected];
 
-    const message = `
+      if (src) {
+        modelImage.src = src;
+      }
+      modelImage.alt = selected;
+      modelCaption.innerHTML = `Currently viewing: <strong>${selected}</strong>`;
+    }
+
+    modelSelect.addEventListener("change", updateModelVisual);
+
+    // Initial sync
+    updateModelVisual();
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const model = document.getElementById("model").value;
+      const qty = document.getElementById("qty").value || "1";
+      const city = document.getElementById("city").value.trim();
+      const notes = document.getElementById("notes").value.trim();
+
+      const message = `
 Pre-order enquiry:
 Name: ${name}
 Customer Phone: ${phone}
@@ -292,19 +608,19 @@ Qty: ${qty}
 City: ${city || "-"}
 Notes: ${notes || "-"}
 Offer price: ₹2,999 (MRP ₹4,999) – limited launch batch.
-    `.trim();
+      `.trim();
 
-    // 👉 Replace with your business WhatsApp number (without + or spaces)
-    const businessNumber = "917093434056"; // example: 91 + number
+      // Replace with your business WhatsApp number (without + or spaces)
+      const businessNumber = "917093434056";
 
-    const waUrl =
-      "https://wa.me/" +
-      businessNumber +
-      "?text=" +
-      encodeURIComponent(message);
+      const waUrl =
+        "https://wa.me/" +
+        businessNumber +
+        "?text=" +
+        encodeURIComponent(message);
 
-    window.open(waUrl, "_blank");
-  });
-</script>
+      window.open(waUrl, "_blank");
+    });
+  </script>
 </body>
 </html>

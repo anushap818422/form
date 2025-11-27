@@ -2,509 +2,184 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pre-order on WhatsApp</title>
+  <title>Scroll Circle Bots</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #1b1b29 0, #050510 55%, #000 100%);
-      color: #f5f5f5;
-      min-height: 100vh;
+      min-height: 200vh; /* extra height so you can scroll */
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 24px;
+      align-items: flex-start;
+      background: #111;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding-top: 150px; /* push orbit down a bit */
     }
 
-    .page-wrapper {
+    .orbit-wrapper {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      margin: 0 auto;
+    }
+
+    .orbit {
+      position: relative;
       width: 100%;
-      max-width: 960px;
+      height: 100%;
     }
 
-    .card-shell {
-      display: flex;
-      flex-wrap: wrap;
-      background: rgba(8, 8, 15, 0.96);
-      border-radius: 22px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(18px);
-    }
-
-    /* LEFT INFO PANEL */
-    .info-panel {
-      flex: 1.1;
-      min-width: 260px;
-      padding: 26px 26px 22px;
-      background: radial-gradient(circle at top left, #ffcf71 0, #ff8a71 35%, #181820 100%);
-      color: #1a1010;
-      position: relative;
-      isolation: isolate;
-    }
-
-    .info-panel::after {
-      content: "";
+    .orbit img {
       position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at bottom right, rgba(0,0,0,0.35), transparent 60%);
-      mix-blend-mode: multiply;
-      pointer-events: none;
+      top: 50%;
+      left: 50%;
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+      transform: translate(-50%, -50%);
+      transition:
+        transform 0.45s ease,
+        opacity 0.35s ease,
+        box-shadow 0.3s ease;
     }
 
-    .info-content {
-      position: relative;
+    /* Central image styling */
+    .orbit img.center {
+      z-index: 2;
+      width: 100px;
+      height: 100px;
+      cursor: default;
+    }
+
+    /* Outer images initial state (hidden / collapsed into center) */
+    .orbit img.satellite {
+      opacity: 0;
       z-index: 1;
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      background: rgba(255,255,255,0.9);
-      color: #111;
+    /* Radius of the circle for satellites */
+    :root {
+      --orbit-radius: 120px;
     }
 
-    .badge-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #16a34a;
-      box-shadow: 0 0 0 4px rgba(22,163,74,0.35);
+    /* When orbit has .active (added on scroll), show satellites */
+    .orbit.active img.satellite {
+      opacity: 1;
     }
 
-    .info-title {
-      margin: 18px 0 6px;
-      font-size: 24px;
-      font-weight: 700;
+    /* 8 images => 360 / 8 = 45 degrees apart */
+
+    /* 1st satellite: 0deg (right) */
+    .orbit.active img.s1 {
+      transform: translate(-50%, -50%) rotate(0deg)
+                 translate(var(--orbit-radius)) rotate(0deg);
     }
 
-    .info-sub {
-      font-size: 14px;
-      opacity: 0.9;
-      max-width: 260px;
+    /* 2nd satellite: 45deg */
+    .orbit.active img.s2 {
+      transform: translate(-50%, -50%) rotate(45deg)
+                 translate(var(--orbit-radius)) rotate(-45deg);
     }
 
-    /* MODEL IMAGE AREA */
-    .model-visual {
-      margin-top: 20px;
-      border-radius: 18px;
-      background: rgba(0,0,0,0.18);
-      padding: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 190px;
+    /* 3rd satellite: 90deg (bottom) */
+    .orbit.active img.s3 {
+      transform: translate(-50%, -50%) rotate(90deg)
+                 translate(var(--orbit-radius)) rotate(-90deg);
     }
 
-    .model-visual img {
-      max-width: 100%;
-      max-height: 200px;
-      object-fit: contain;
-      border-radius: 16px;
-      display: block;
+    /* 4th satellite: 135deg */
+    .orbit.active img.s4 {
+      transform: translate(-50%, -50%) rotate(135deg)
+                 translate(var(--orbit-radius)) rotate(-135deg);
     }
 
-    .model-caption {
-      margin-top: 8px;
-      font-size: 12px;
-      opacity: 0.85;
+    /* 5th satellite: 180deg (left) */
+    .orbit.active img.s5 {
+      transform: translate(-50%, -50%) rotate(180deg)
+                 translate(var(--orbit-radius)) rotate(-180deg);
     }
 
-    /* RIGHT FORM PANEL */
-    .form-panel {
-      flex: 1.4;
-      min-width: 320px;
-      padding: 24px 26px 22px;
-      background: rgba(10, 10, 18, 0.98);
+    /* 6th satellite: 225deg */
+    .orbit.active img.s6 {
+      transform: translate(-50%, -50%) rotate(225deg)
+                 translate(var(--orbit-radius)) rotate(-225deg);
     }
 
-    .form-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
+    /* 7th satellite: 270deg (top) */
+    .orbit.active img.s7 {
+      transform: translate(-50%, -50%) rotate(270deg)
+                 translate(var(--orbit-radius)) rotate(-270deg);
     }
 
-    .form-title {
-      font-size: 18px;
-      font-weight: 600;
+    /* 8th satellite: 315deg */
+    .orbit.active img.s8 {
+      transform: translate(-50%, -50%) rotate(315deg)
+                 translate(var(--orbit-radius)) rotate(-315deg);
     }
 
-    .form-caption {
-      font-size: 12px;
-      opacity: 0.7;
+    /* Optional: glow when active */
+    .orbit.active img.center {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.9);
     }
+    .orbit img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+  transform: translate(-50%, -50%);
+  transition:
+    transform 1.6s ease,
+    opacity 1.4s ease,
+    box-shadow 1.4s ease; /* slower transition */
+}
 
-    .close-x {
-      border: none;
-      background: transparent;
-      color: #888;
-      font-size: 18px;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .close-x:hover {
-      color: #fff;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .form-group.full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      font-size: 12px;
-      color: #c8c8c8;
-    }
-
-    input,
-    select,
-    textarea {
-      background: #13131a;
-      border-radius: 9px;
-      border: 1px solid #262636;
-      padding: 8px 10px;
-      color: #f5f5f5;
-      font-size: 14px;
-      outline: none;
-      transition: border 0.2s, box-shadow 0.2s, background 0.2s;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: #666b77;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #27d366;
-      box-shadow: 0 0 0 1px rgba(39, 211, 102, 0.35);
-      background: #101018;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 58px;
-      max-height: 120px;
-    }
-
-    /* PRICE BLOCK – NOW UNDER THE FORM ON THE RIGHT */
-    .price-block {
-      background: #fff3c7;
-      border-radius: 14px;
-      padding: 10px 12px;
-      font-size: 13px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-top: 6px;
-      color: #111;
-    }
-
-    .price-main {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
-
-    .price-main strong {
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .price-old {
-      text-decoration: line-through;
-      font-size: 13px;
-      opacity: 0.7;
-    }
-
-    .price-note {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      opacity: 0.85;
-    }
-
-    .form-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .tiny-note {
-      font-size: 11px;
-      opacity: 0.6;
-    }
-
-    .wa-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 18px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      background: #25d366;
-      color: #0b1b10;
-      font-weight: 600;
-      font-size: 14px;
-      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45);
-      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s;
-      white-space: nowrap;
-    }
-
-    .wa-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 32px rgba(37, 211, 102, 0.6);
-      background: #20c158;
-    }
-
-    .wa-btn svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    @media (max-width: 780px) {
-      .card-shell {
-        flex-direction: column;
-      }
-
-      .info-panel,
-      .form-panel {
-        width: 100%;
-      }
-
-      .info-panel {
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-      }
-    }
-
-    @media (max-width: 540px) {
-      body {
-        padding: 16px;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .form-footer {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .form-footer .tiny-note {
-        text-align: center;
-      }
-
-      .form-footer .wa-btn {
-        justify-content: center;
-      }
-    }
   </style>
 </head>
 <body>
-  <div class="page-wrapper">
-    <div class="card-shell">
-      <!-- LEFT INFO -->
-      <div class="info-panel">
-        <div class="info-content">
-          <div class="badge">
-            <span class="badge-dot"></span>
-            Limited launch batch
-          </div>
+  <div class="orbit-wrapper">
+    <div class="orbit">
+      <!-- Center image -->
+      <img src="./assets/images/gigi.png" alt="Center" class="center" />
 
-          <h1 class="info-title">Pre-order your emotion bot</h1>
-          <p class="info-sub">
-            Reserve a companion from the Bot Universe and complete payment later on WhatsApp.
-          </p>
-
-          <!-- MODEL IMAGE THAT CHANGES WITH SELECT -->
-          <div class="model-visual">
-            <img id="modelImage" src="gigi-joy.png" alt="Gigi — Joy" />
-          </div>
-          <div class="model-caption" id="modelCaption">
-            Currently viewing: <strong>Gigi — Joy</strong>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT FORM -->
-      <div class="form-panel">
-        <div class="form-header">
-          <div>
-            <div class="form-title">Pre-order on WhatsApp</div>
-            <div class="form-caption">We’ll create a WhatsApp message with your details.</div>
-          </div>
-          <button class="close-x" type="button">×</button>
-        </div>
-
-        <form id="preorderForm">
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="name">Your name</label>
-              <input id="name" name="name" type="text" placeholder="Enter your name" required />
-            </div>
-
-            <div class="form-group">
-              <label for="phone">Phone</label>
-              <input id="phone" name="phone" type="tel" placeholder="+91 ..." required />
-            </div>
-
-            <div class="form-group">
-              <label for="model">Model</label>
-              <select id="model" name="model">
-                <option value="Gigi — Joy">Gigi — Joy</option>
-                <option value="Zenzo — Calm">Zenzo — Calm</option>
-                <option value="Bluvi — Curiosity">Bluvi — Curiosity</option>
-                <option value="Melo — Caring">Melo — Caring</option>
-                <option value="Nix — Alert">Nix — Alert</option>
-                <option value="Sparx — Excitement">Sparx — Excitement</option>
-                <option value="Nova — Wonder">Nova — Wonder</option>
-                <option value="Bobo — Warmth">Bobo — Warmth</option>
-                <option value="Astra — Focus">Astra — Focus</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="qty">Qty</label>
-              <input id="qty" name="qty" type="number" min="1" value="1" />
-            </div>
-
-            <div class="form-group">
-              <label for="city">City</label>
-              <input id="city" name="city" type="text" placeholder="Your city" />
-            </div>
-
-            <div class="form-group full">
-              <label for="notes">Notes (optional)</label>
-              <textarea id="notes" name="notes" placeholder="Any special requests or questions?"></textarea>
-            </div>
-          </div>
-
-          <!-- PRICE AT THE BOTTOM OF THE PRE-ORDER FORM -->
-          <div class="price-block">
-            <div class="price-main">
-              <span>Offer price</span>
-              <strong>₹2,999</strong>
-              <span class="price-old">₹4,999</span>
-            </div>
-            <div class="price-note">Special pricing for the first launch batch only</div>
-          </div>
-
-          <div class="form-footer">
-            <div class="tiny-note">
-              You’ll be redirected to WhatsApp to confirm this pre-order.
-            </div>
-
-            <button type="submit" class="wa-btn">
-              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path
-                  d="M16.01 5.333c-5.5 0-9.967 4.3-9.967 9.6 0 1.69.456 3.335 1.324 4.79L5.333 26.667l7.127-1.992c1.39.38 2.506.518 3.55.518h.004c5.5 0 9.967-4.3 9.967-9.6 0-2.565-1.04-4.977-2.93-6.79-1.89-1.817-4.414-2.77-7.04-2.77zm0 2.134c4.3 0 7.8 3.382 7.8 7.547 0 4.157-3.5 7.547-7.803 7.547-1.04 0-2.083-.147-3.09-.438l-.22-.067-4.23 1.183 1.17-4.022-.14-.208c-.81-1.21-1.237-2.617-1.237-4.002 0-4.165 3.5-7.547 7.8-7.547zm-3.77 2.74c-.2-.44-.41-.45-.6-.458l-.51-.01c-.18 0-.47.067-.72.335-.25.27-.94.916-.94 2.233 0 1.317.96 2.59 1.09 2.768.13.178 1.85 2.91 4.55 3.963 2.24.883 2.7.71 3.19.666.49-.044 1.57-.64 1.79-1.26.22-.62.22-1.15.15-1.26-.07-.11-.24-.18-.5-.32-.26-.14-1.57-.86-1.81-.96-.24-.09-.42-.14-.6.14-.18.28-.69.96-.84 1.16-.15.2-.31.21-.57.07-.26-.14-1.09-.44-2.07-1.4-.76-.74-1.27-1.65-1.42-1.93-.15-.28-.02-.43.11-.57.11-.11.26-.29.38-.43.12-.15.16-.25.24-.42.08-.18.04-.33-.02-.46-.06-.11-.57-1.4-.78-1.92z"
-                  fill="currentColor"
-                />
-              </svg>
-              Send on WhatsApp
-            </button>
-          </div>
-        </form>
-      </div>
+      <!-- 8 outer images -->
+      <img src="./assets/images/zenzo.png" alt="Image 1" class="satellite s1" />
+      <img src="./assets/images/astra.png" alt="Image 2" class="satellite s2" />
+      <img src="./assets/images/bluvi.png" alt="Image 3" class="satellite s3" />
+      <img src="./assets/images/bobo.png" alt="Image 4" class="satellite s4" />
+      <img src="./assets/images/melo.png" alt="Image 5" class="satellite s5" />
+      <img src="./assets/images/nix.png" alt="Image 6" class="satellite s6" />
+      <img src="./assets/images/nova.png" alt="Image 7" class="satellite s7" />
+      <img src="./assets/images/sparx.png" alt="Image 8" class="satellite s8" />
     </div>
   </div>
 
   <script>
-    const form = document.getElementById("preorderForm");
-    const modelSelect = document.getElementById("model");
-    const modelImage = document.getElementById("modelImage");
-    const modelCaption = document.getElementById("modelCaption");
+    // When the orbit comes into view while scrolling, add the "active" class
+    document.addEventListener('DOMContentLoaded', function () {
+      const orbit = document.querySelector('.orbit');
 
-    // Map models to image paths (replace with your real image URLs)
-    const modelImages = {
-      "Gigi — Joy": "gigi-joy.png",
-      "Zenzo — Calm": "zenzo-calm.png",
-      "Bluvi — Curiosity": "bluvi-curiosity.png",
-      "Melo — Caring": "melo-caring.png",
-      "Nix — Alert": "nix-alert.png",
-      "Sparx — Excitement": "sparx-excitement.png",
-      "Nova — Wonder": "nova-wonder.png",
-      "Bobo — Warmth": "bobo-warmth.png",
-      "Astra — Focus": "astra-focus.png"
-    };
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              orbit.classList.add('active');   // expand bots
+            } else {
+              orbit.classList.remove('active'); // collapse when out of view
+              // If you want them to stay open once triggered, remove this line
+            }
+          });
+        },
+        {
+          threshold: 0.3 // 30% of the element visible
+        }
+      );
 
-    function updateModelVisual() {
-      const selected = modelSelect.value;
-      const src = modelImages[selected];
-
-      if (src) {
-        modelImage.src = src;
-      }
-      modelImage.alt = selected;
-      modelCaption.innerHTML = `Currently viewing: <strong>${selected}</strong>`;
-    }
-
-    modelSelect.addEventListener("change", updateModelVisual);
-
-    // Initial sync
-    updateModelVisual();
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const name = document.getElementById("name").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const model = document.getElementById("model").value;
-      const qty = document.getElementById("qty").value || "1";
-      const city = document.getElementById("city").value.trim();
-      const notes = document.getElementById("notes").value.trim();
-
-      const message = `
-Pre-order enquiry:
-Name: ${name}
-Customer Phone: ${phone}
-Model: ${model}
-Qty: ${qty}
-City: ${city || "-"}
-Notes: ${notes || "-"}
-Offer price: ₹2,999 (MRP ₹4,999) – limited launch batch.
-      `.trim();
-
-      // Replace with your business WhatsApp number (without + or spaces)
-      const businessNumber = "917093434056";
-
-      const waUrl =
-        "https://wa.me/" +
-        businessNumber +
-        "?text=" +
-        encodeURIComponent(message);
-
-      window.open(waUrl, "_blank");
+      observer.observe(orbit);
     });
   </script>
 </body>
